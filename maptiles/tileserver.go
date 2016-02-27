@@ -29,7 +29,7 @@ func (t *TileServer) AddMapnikLayer(layerName string, stylesheet string) {
 	t.lmp.AddRenderer(layerName, stylesheet)
 }
 
-var pathRegex = regexp.MustCompile(`/([A-Za-z0-9]+)/([0-9]+)/([0-9]+)/([0-9]+)\.png`)
+var pathRegex = regexp.MustCompile(`/([A-Za-z0-9]+)/([0-9]+)/([0-9]+)/([0-9]+)(@([0-2])+x)*\.png`)
 
 func (t *TileServer) ServeTileRequest(w http.ResponseWriter, r *http.Request, tc TileCoord) {
 	ch := make(chan TileFetchResult)
@@ -74,6 +74,7 @@ func (t *TileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	z, _ := strconv.ParseUint(path[2], 10, 64)
 	x, _ := strconv.ParseUint(path[3], 10, 64)
 	y, _ := strconv.ParseUint(path[4], 10, 64)
+	sf, _ := strconv.ParseUint(path[5], 10, 64)
 
-	t.ServeTileRequest(w, r, TileCoord{x, y, z, t.TmsSchema, l})
+	t.ServeTileRequest(w, r, TileCoord{x, y, z, t.TmsSchema, l, sf})
 }

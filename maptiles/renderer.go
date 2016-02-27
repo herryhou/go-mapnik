@@ -8,13 +8,14 @@ import (
 )
 
 type TileCoord struct {
-	X, Y, Zoom uint64
-	Tms        bool
-	Layer      string
+	X, Y, Zoom  uint64
+	Tms         bool
+	Layer       string
+	ScaleFactor uint
 }
 
 func (c TileCoord) OSMFilename() string {
-	return fmt.Sprintf("%d/%d/%d.png", c.Zoom, c.X, c.Y)
+	return fmt.Sprintf("%d/%d/%d@%dx.png", c.Zoom, c.X, c.Y, c.ScaleFactor)
 }
 
 type TileFetchResult struct {
@@ -75,7 +76,7 @@ func NewTileRenderer(stylesheet string) *TileRenderer {
 
 func (t *TileRenderer) RenderTile(c TileCoord) ([]byte, error) {
 	c.setTMS(false)
-	return t.RenderTileZXY(c.Zoom, c.X, c.Y)
+	return t.RenderTileZXY(c.Zoom, c.X, c.Y, c.ScaleFactor)
 }
 
 // Render a tile with coordinates in Google tile format.
@@ -83,7 +84,7 @@ func (t *TileRenderer) RenderTile(c TileCoord) ([]byte, error) {
 // so wrap with a mutex when accessing the same renderer by multiple
 // threads or setup multiple goroutinesand communicate with channels,
 // see NewTileRendererChan.
-func (t *TileRenderer) RenderTileZXY(zoom, x, y uint64) ([]byte, error) {
+func (t *TileRenderer) RenderTileZXY(zoom, x, y, scaleFactor uint64) ([]byte, error) {
 	// Calculate pixel positions of bottom left & top right
 	p0 := [2]float64{float64(x) * 256, (float64(y) + 1) * 256}
 	p1 := [2]float64{(float64(x) + 1) * 256, float64(y) * 256}
@@ -97,10 +98,12 @@ func (t *TileRenderer) RenderTileZXY(zoom, x, y uint64) ([]byte, error) {
 	c1 := t.mp.Forward(mapnik.Coord{l1[0], l1[1]})
 
 	// Bounding box for the Tile
-	t.m.Resize(256, 256)
+	t.m.Resize(256*scaleFactor, 256*scaleFactor)
 	t.m.ZoomToMinMax(c0.X, c0.Y, c1.X, c1.Y)
 	t.m.SetBufferSize(128)
 
-	blob, err := t.m.RenderToMemoryPng()
+	opt := RenderOpts{}
+	opt.scaleFactor = scaleFactor
+	blob, err := t.m.RenderToMemoryPng(opt)
 	return blob, err
 }

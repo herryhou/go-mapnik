@@ -122,17 +122,42 @@ func (m *Map) ZoomToMinMax(minx, miny, maxx, maxy float64) {
 	C.mapnik_map_zoom_to_box(m.m, bbox)
 }
 
-func (m *Map) RenderToFile(path string) error {
+// RenderOpts defines rendering options.
+type RenderOpts struct {
+	// Scale renders the map at a fixed scale denominator.
+	Scale float64
+	// ScaleFactor renders the map with larger fonts sizes, line width, etc. For printing or retina/hq iamges.
+	ScaleFactor float64
+	// Format for the rendered image ('jpeg80', 'png256', etc. see: https://github.com/mapnik/mapnik/wiki/Image-IO)
+	Format string
+}
+
+func (m *Map) RenderToFile(path string, opts RenderOpts) error {
+	scaleFactor := opts.ScaleFactor
+	if scaleFactor == 0.0 {
+		scaleFactor = 1.0
+	}
+	var format *C.char
+	if opts.Format != "" {
+		format = C.CString(opts.Format)
+	} else {
+		format = C.CString("png8")
+	}
+	defer C.free(unsafe.Pointer(format))
 	cs := C.CString(path)
 	defer C.free(unsafe.Pointer(cs))
-	if C.mapnik_map_render_to_file(m.m, cs) != 0 {
+	if C.mapnik_map_render_to_file(m.m, cs, C.double(opts.Scale), C.double(scaleFactor), format) != 0 {
 		return m.lastError()
 	}
 	return nil
 }
 
-func (m *Map) RenderToMemoryPng() ([]byte, error) {
-	i := C.mapnik_map_render_to_image(m.m)
+func (m *Map) RenderToMemoryPng(opts RenderOpts) ([]byte, error) {
+	scaleFactor := opts.ScaleFactor
+	if scaleFactor == 0.0 {
+		scaleFactor = 1.0
+	}
+	i := C.mapnik_map_render_to_image(m.m, C.double(opts.Scale), C.double(scaleFactor))
 	if i == nil {
 		return nil, m.lastError()
 	}
