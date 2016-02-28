@@ -2,10 +2,11 @@ package maptiles
 
 import (
 	"fmt"
-	"github.com/fawick/go-mapnik/mapnik"
 	"io/ioutil"
 	"log"
 	"os"
+
+	"github.com/herryhou/go-mapnik/mapnik"
 )
 
 type Generator struct {

@@ -18,7 +18,7 @@ Installation
 
 	OR
 
-    - `go get -d github.com/fawick/go-mapnik/mapnik`
+    - `go get -d github.com/herryhou/go-mapnik/mapnik`
 3. `cd mapnik` and run the configuration script `./configure.bash`. 
    That script will setup the correct paths for including Mapnik headers and
    linking against the Mapnik shared library, as well as download the Mapnik C
@@ -42,11 +42,11 @@ binaries on your own.
 
 1. Install Mapnik 2.2 Windows 32bit SDK from http://mapnik.org/pages/downloads.html
 2. Download the sources, either by 
-    + `git clone` the repository to $GOPATH/src/fawick/go-mapnik 
+    + `git clone` the repository to $GOPATH/src/herryhou/go-mapnik 
 	
     OR
 	
-    + `go get -d github.com/fawick/go-mapnik/mapnik`
+    + `go get -d github.com/herryhou/go-mapnik/mapnik`
 3. Run `configure.cmd` in the folder `mapnik` to compile a C DLL
    that can be used by Go/CGO/GCC later (sources will be downloaded
    automatically). Also, the script will  `go install` the bindings.

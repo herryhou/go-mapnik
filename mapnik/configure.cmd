@@ -18,8 +18,8 @@ echo.
 echo.Downloading C API from github
 echo.
 
-if not exist mapnik_c_api.cpp curl -LO https://raw.github.com/fawick/mapnik-c-api/master/mapnik_c_api.cpp
-if not exist mapnik_c_api.h curl -LO https://raw.github.com/fawick/mapnik-c-api/master/mapnik_c_api.h
+if not exist mapnik_c_api.cpp curl -LO https://raw.github.com/herryhou/mapnik-c-api/master/mapnik_c_api.cpp
+if not exist mapnik_c_api.h curl -LO https://raw.github.com/herryhou/mapnik-c-api/master/mapnik_c_api.h
 
 If DEFINED ProgramFiles(x86) Set BUILDTOOLS32BIT=%ProgramFiles(x86)%
 If NOT DEFINED ProgramFiles(x86) Set BUILDTOOLS32BIT=%ProgramFiles%
@@ -70,8 +70,8 @@ echo.Compiling C API to shared library
 echo.
 
 if not exist mapnik_c_api.obj cl -c -nologo -Zm200 -Zc:wchar_t- -O2 %MAPNIK_CXXFLAGS% -W3 -w34100 -w34189 %MAPNIK_C_DEFINES% -I"%MAPNIK_SDK_PATH%\include" -I"%MAPNIK_SDK_PATH%\include\mapnik\agg" -I"." mapnik_c_api.cpp
-::link /LIBPATH:%MAPNIK_LDFLAGS% %MAPNIK_LIBS% %MAPNIK_DEPLIBS% mapnik_c_api.obj /NOLOGO /DYNAMICBASE /NXCOMPAT /INCREMENTAL:NO /DLL /OUT:mapnik_c_api.dll 
-link /LIBPATH:%MAPNIK_LDFLAGS% %MAPNIK_LIBS%  mapnik_c_api.obj /DLL /OUT:mapnik_c_api.dll 
+::link /LIBPATH:%MAPNIK_LDFLAGS% %MAPNIK_LIBS% %MAPNIK_DEPLIBS% mapnik_c_api.obj /NOLOGO /DYNAMICBASE /NXCOMPAT /INCREMENTAL:NO /DLL /OUT:mapnik_c_api.dll
+link /LIBPATH:%MAPNIK_LDFLAGS% %MAPNIK_LIBS%  mapnik_c_api.obj /DLL /OUT:mapnik_c_api.dll
 
 IF NOT EXIST mapnik_c_api.dll (
     echo.
@@ -90,7 +90,7 @@ echo.
 echo.Installing Go package
 echo.
 
-go install 
+go install
 
 goto :eof
 
