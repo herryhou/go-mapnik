@@ -55,7 +55,7 @@ func (g *Generator) Run(lowLeft, upRight mapnik.Coord, minZ, maxZ uint64, name s
 		for x := uint64(px0[0] / 256.0); x <= uint64(px1[0]/256.0); x++ {
 			ensureDirExists(fmt.Sprintf("%d/%d", z, x))
 			for y := uint64(px0[1] / 256.0); y <= uint64(px1[1]/256.0); y++ {
-				c <- TileCoord{x, y, z, false, ""}
+				c <- TileCoord{x, y, z, false, "", 1}
 			}
 		}
 	}

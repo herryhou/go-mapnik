@@ -24,7 +24,8 @@ func SimpleExample() {
 	ll := p.Forward(mapnik.Coord{0, 35})  // 0 degrees longitude, 35 degrees north
 	ur := p.Forward(mapnik.Coord{16, 70}) // 16 degrees east, 70 degrees north
 	m.ZoomToMinMax(ll.X, ll.Y, ur.X, ur.Y)
-	blob, err := m.RenderToMemoryPng()
+	opts := RenderOpts{}
+	blob, err := m.RenderToMemoryPng(opts)
 	if err != nil {
 		fmt.Println(err)
 		return
