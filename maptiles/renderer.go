@@ -11,7 +11,7 @@ type TileCoord struct {
 	X, Y, Zoom  uint64
 	Tms         bool
 	Layer       string
-	ScaleFactor uint
+	ScaleFactor uint32
 }
 
 func (c TileCoord) OSMFilename() string {
@@ -84,7 +84,7 @@ func (t *TileRenderer) RenderTile(c TileCoord) ([]byte, error) {
 // so wrap with a mutex when accessing the same renderer by multiple
 // threads or setup multiple goroutinesand communicate with channels,
 // see NewTileRendererChan.
-func (t *TileRenderer) RenderTileZXY(zoom, x, y, scaleFactor uint64) ([]byte, error) {
+func (t *TileRenderer) RenderTileZXY(zoom, x, y uint64, scaleFactor uint32) ([]byte, error) {
 	// Calculate pixel positions of bottom left & top right
 	p0 := [2]float64{float64(x) * 256, (float64(y) + 1) * 256}
 	p1 := [2]float64{(float64(x) + 1) * 256, float64(y) * 256}
@@ -102,8 +102,8 @@ func (t *TileRenderer) RenderTileZXY(zoom, x, y, scaleFactor uint64) ([]byte, er
 	t.m.ZoomToMinMax(c0.X, c0.Y, c1.X, c1.Y)
 	t.m.SetBufferSize(128)
 
-	opt := RenderOpts{}
-	opt.scaleFactor = scaleFactor
-	blob, err := t.m.RenderToMemoryPng(opt)
+	opts := mapnik.RenderOpts{}
+	opts.ScaleFactor = float64(scaleFactor)
+	blob, err := t.m.RenderToMemoryPng(opts)
 	return blob, err
 }

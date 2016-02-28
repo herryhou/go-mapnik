@@ -76,5 +76,5 @@ func (t *TileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	y, _ := strconv.ParseUint(path[4], 10, 64)
 	sf, _ := strconv.ParseUint(path[5], 10, 64)
 
-	t.ServeTileRequest(w, r, TileCoord{x, y, z, t.TmsSchema, l, sf})
+	t.ServeTileRequest(w, r, TileCoord{x, y, z, t.TmsSchema, l, uint32(sf)})
 }
