@@ -62,6 +62,14 @@ func (t *TileServer) ServeTileRequest(w http.ResponseWriter, r *http.Request, tc
 	}
 }
 
+func toScaleFactor(sf uint64) uint32 {
+	switch sf {
+	case 2:
+		return 2
+	}
+	return 1
+}
+
 func (t *TileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	path := pathRegex.FindStringSubmatch(r.URL.Path)
 
@@ -74,7 +82,10 @@ func (t *TileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	z, _ := strconv.ParseUint(path[2], 10, 64)
 	x, _ := strconv.ParseUint(path[3], 10, 64)
 	y, _ := strconv.ParseUint(path[4], 10, 64)
-	sf, _ := strconv.ParseUint(path[5], 10, 64)
+	sf, _ := strconv.ParseUint(path[6], 10, 64)
+	//log.Printf("ServeHTTP sf %d", sf)
+	sfi := toScaleFactor(sf)
+	//log.Printf("ServeHTTP sfi %d", sfi)
 
-	t.ServeTileRequest(w, r, TileCoord{x, y, z, t.TmsSchema, l, uint32(sf)})
+	t.ServeTileRequest(w, r, TileCoord{x, y, z, t.TmsSchema, l, sfi})
 }

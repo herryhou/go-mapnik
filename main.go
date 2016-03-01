@@ -24,7 +24,7 @@ func SimpleExample() {
 	ll := p.Forward(mapnik.Coord{0, 35})  // 0 degrees longitude, 35 degrees north
 	ur := p.Forward(mapnik.Coord{16, 70}) // 16 degrees east, 70 degrees north
 	m.ZoomToMinMax(ll.X, ll.Y, ur.X, ur.Y)
-        opts := mapnik.RenderOpts{}
+	opts := mapnik.RenderOpts{}
 	opts.ScaleFactor = 1
 	blob, err := m.RenderToMemoryPng(opts)
 	if err != nil {
@@ -66,6 +66,7 @@ func TileserverWithCaching() {
 	os.Remove(cache)
 	t := maptiles.NewTileServer(cache)
 	t.AddMapnikLayer("tc110", "/src/admin_line.tm2/project_fix.xml")
+	t.AddMapnikLayer("tc210", "/src/admin_line.tm2/project_fix.xml")
 	http.ListenAndServe(":8080", t)
 }
 

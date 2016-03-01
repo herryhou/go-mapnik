@@ -100,10 +100,11 @@ func (t *TileRenderer) RenderTileZXY(zoom, x, y uint64, scaleFactor uint32) ([]b
 	// Bounding box for the Tile
 	t.m.Resize(256*scaleFactor, 256*scaleFactor)
 	t.m.ZoomToMinMax(c0.X, c0.Y, c1.X, c1.Y)
-	t.m.SetBufferSize(128)
+	t.m.SetBufferSize(32 * int(scaleFactor))
 
 	opts := mapnik.RenderOpts{}
 	opts.ScaleFactor = float64(scaleFactor)
+	//log.Printf("%d/%d/%d@%fx.png", zoom, x, y, opts.ScaleFactor)
 	blob, err := t.m.RenderToMemoryPng(opts)
 	return blob, err
 }
