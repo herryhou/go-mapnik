@@ -68,7 +68,11 @@ func NewTileRenderer(stylesheet string) *TileRenderer {
 		log.Fatal(err)
 	}
 	t.m = mapnik.NewMap(256, 256)
-	t.m.Load(stylesheet)
+
+	if err := t.m.Load(stylesheet); err != nil {
+		log.Fatal(err)
+	}
+
 	t.mp = t.m.Projection()
 
 	return t
